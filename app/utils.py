@@ -3,6 +3,7 @@ from groq import Groq
 from dotenv import load_dotenv
 import streamlit as st
 import PyPDF2
+import re
 
 load_dotenv()
 
@@ -37,7 +38,7 @@ def groq_helper(prompt: str, **kwargs):
     modelid = kwargs.get('modelid', 'mixtral-8x7b-32768')
     temperature = kwargs.get('temperature', 0.7)
     top_p = kwargs.get('top_p', 1.0)
-    max_tokens = kwargs.get('max_tokens', 500)
+    max_tokens = kwargs.get('max_tokens', 2000)
     stop_sequences = kwargs.get('stop_sequences', None)
     stream = kwargs.get('stream', False)
 
@@ -83,10 +84,11 @@ def get_shared_variable(variable_name, default_value=None):
     return st.session_state.shared_state.get(variable_name, default_value)
 
 
-
-import re
-
 def parse_problems(text):
+    '''
+    return a dictionary with key of problem number and values of the problem from inputted text
+    '''
+    
     pattern = r'(\d+)\.\s*Solve for ([a-z]):(.+)'
     problems = {}
 
@@ -102,11 +104,10 @@ def parse_problems(text):
 
 
 if __name__ == "__main__":
-    response = groq_helper("What is the capital of South Korea?")
-    print(response.choices[0].message.content)
     init_state()
+    response = groq_helper("What is the capital of South Korea?")
+    print(response)
     
-    problems = parse_problems(input_text)
-    print(problems)
+    
     
     
