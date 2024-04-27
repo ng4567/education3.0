@@ -1,5 +1,10 @@
 import os
 from groq import Groq
+from dotenv import load_dotenv
+import streamlit as st
+import PyPDF2
+
+load_dotenv()
 
 def groq_helper(prompt: str, **kwargs):
     """
@@ -23,8 +28,6 @@ def groq_helper(prompt: str, **kwargs):
     Returns:
         A grok chat completion object. Use .choices[0].message.content to get just the text of the return.
     """
-    groq_api_key = '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'
-    os.environ["GROQ_API_KEY"] = groq_api_key
         
     client = Groq(
     api_key=os.environ.get("GROQ_API_KEY"),
@@ -50,12 +53,60 @@ def groq_helper(prompt: str, **kwargs):
         top_p=top_p,
         max_tokens=max_tokens,
         stop=stop_sequences,
-        stream=stream
+        stream=stream,
+        seed=1234
     )
 
     return chat_completion
+
+def extract_text_from_pdf(pdf_bytes):
+    pdf_reader = PyPDF2.PdfReader(pdf_bytes)
+    num_pages = len(pdf_reader.pages)
+    text = ''
+    for page_num in range(num_pages):
+        page = pdf_reader.pages[page_num]
+        page_text = page.extract_text()
+        text += page_text
+    return text
+
+#shared variables handing with Streamlit Session States
+def init_state():
+    if "shared_state" not in st.session_state:
+        st.session_state.shared_state = {}
+
+def set_shared_variable(variable_name, value):
+    init_state()  # Ensure shared_state is initialized
+    st.session_state.shared_state[variable_name] = value
+
+def get_shared_variable(variable_name, default_value=None):
+    init_state()  # Ensure shared_state is initialized
+    return st.session_state.shared_state.get(variable_name, default_value)
+
+
+
+import re
+
+def parse_problems(text):
+    pattern = r'(\d+)\.\s*Solve for ([a-z]):(.+)'
+    problems = {}
+
+    for line in text.strip().split('\n'):
+        match = re.match(pattern, line, re.IGNORECASE)
+        if match:
+            problem_num = int(match.group(1))
+            variable = match.group(2)
+            expression = match.group(3).strip()
+            problems[problem_num] = expression
+
+    return problems
 
 
 if __name__ == "__main__":
     response = groq_helper("What is the capital of South Korea?")
     print(response.choices[0].message.content)
+    init_state()
+    
+    problems = parse_problems(input_text)
+    print(problems)
+    
+    
