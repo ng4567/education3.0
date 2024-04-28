@@ -13,3 +13,7 @@ Fun RAG app to pull problems from math textbooks and generate lesson plans from 
 2. Then, create a groq API key here: [link](https://console.groq.com/keys)
 
 Then, set the `GROQ_API_KEY` environment variable or create a `.env` file and load it using the `python-dotenv` library (you will need to modify my code if you don't take this option to avoid import errors).
+
+3. Finally, you'll need to setup your python environment. I have provided a requirements.txt file that contains all needed libraries.
+
+After creating a new conda or pyenv, run `pip install -r requirements.txt`
