@@ -1,5 +1,16 @@
 import streamlit as st 
-from utils import parse_problems, get_shared_variable, groq_helper
+from utils import parse_problems, get_shared_variable, groq_helper, parse_questions, set_shared_variable
+import re
+
+
+def save_questions(input):
+        questions = parse_questions(input)
+        st.session_state.questions.append(questions)
+
+        st.markdown(f'Sure! The following questions have been saved as an assignment {questions}.')
+        st.session_state.messages.append({"role": "assistant",
+                                           "content": f'Sure! The following questions have been saved as an assignment {questions}.',
+                                           "assistant_msg_counter": st.session_state.msg_counter})
 
 
 def app():
@@ -10,12 +21,9 @@ def app():
 
     problems = get_shared_variable('algebraic_problems', {})
 
-
-
     
     if len(problems) > 0:
         st.header("Lesson Planner chatbot:") 
-        
         
         if 'msg_counter' not in st.session_state:
             st.session_state.msg_counter = 1
@@ -29,7 +37,10 @@ def app():
                 
                 """
             })
+        if "questions" not in st.session_state:
+            st.session_state.questions = []
 
+        
         # Display chat messages from history on app rerun
         for message in st.session_state.messages:
             with st.chat_message(message["role"]):
@@ -66,22 +77,32 @@ def app():
             
             response = groq_helper(prompt=prompt_for_model)
             llm_response = response.choices[0].message.content
+            
+            pattern = r'(test|exam|homework|practice\s*problems|algebra)'
+            contains_question_list = bool(re.search(pattern, llm_response, re.IGNORECASE))
+
             with st.chat_message("assistant"):
                 st.markdown(llm_response)
+                # If the response contains a list of math questions, display a save button
+                if contains_question_list:
+                    if st.button("Save Math Questions as Homework Assignment", on_click=print('asdfa')):
+                        
+                        # questions = parse_questions(llm_response)
+                        # updated_questions = st.session_state.questions + [questions]
+                        # st.session_state.questions = updated_questions
+                        
+                        # st.markdown(f'Sure! The following questions have been saved as an assignment {questions}.')
+                        # st.session_state.messages.append({"role": "assistant", 
+                        #                       "content": f'Sure! The following questions have been saved as an assignment {questions}.',
+                        #                       "assistant_msg_counter": st.session_state.msg_counter})
+
             # Add LLM response to chat history
             st.session_state.messages.append({"role": "assistant", 
                                               "content": llm_response,
                                               "assistant_msg_counter": st.session_state.msg_counter})
             st.session_state.msg_counter += 1
-            print(st.session_state.messages)
     
-    
-        try:
-            print('1')
-        except:
-            st.error("Unable to call LLM API. Try again later.")
-                
-        
+                        
     else:
         st.write("You must upload a file on the home page for this page to work")
         st.write("YOU DIDN'T UPLOAD A VALID TEXTBOOK")

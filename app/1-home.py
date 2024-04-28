@@ -1,7 +1,6 @@
 import streamlit as st
-import pandas as pd
-from io import StringIO, BytesIO
-from utils import groq_helper, set_shared_variable, parse_problems, init_state, extract_text_from_pdf, get_shared_variable
+from io import BytesIO
+from utils import groq_helper, set_shared_variable, parse_problems, init_state, extract_text_from_pdf, get_shared_variable, question
 
 #Simple app to extract the math problems from an uploaded PDF file of a math textbook
 def app():
@@ -43,17 +42,3 @@ def app():
 
 if __name__ == "__main__":
     app()
-
-
-# #pdf_file = '../data/hw_problems.pdf'
-# extracted_text = extract_text_from_pdf(pdf_file)
-
-# response = groq_helper(f"""Below I will input extracted text from a Math textbook. Return me a list of all the homework problems:
-            
-#             {extracted_text}
-            
-#             Homework problems:
-#             """, max_tokens=8000)
-
-# st.write(response.choices[0].message.content)
-

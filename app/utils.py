@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import streamlit as st
 import PyPDF2
 import re
+from typing import Union
 
 load_dotenv()
 
@@ -75,11 +76,12 @@ def init_state():
     if "shared_state" not in st.session_state:
         st.session_state.shared_state = {}
 
-def set_shared_variable(variable_name, value):
+    
+def set_shared_variable(variable_name: str, value):
     init_state()  # Ensure shared_state is initialized
     st.session_state.shared_state[variable_name] = value
 
-def get_shared_variable(variable_name, default_value=None):
+def get_shared_variable(variable_name: str, default_value=None):
     init_state()  # Ensure shared_state is initialized
     return st.session_state.shared_state.get(variable_name, default_value)
 
@@ -103,11 +105,42 @@ def parse_problems(text):
     return problems
 
 
+class question:
+    def __init__(self, type: str, problem_number: Union[str, int], problem: str):
+        self.type = type
+        self.problem_number = problem_number
+        self.problem = problem
+
+def parse_questions(response_text):
+    questions = []
+    pattern = r'(\d+\.)\s*(.+?)\n'
+    matches = re.finditer(pattern, response_text, re.MULTILINE)
+
+    for match in matches:
+        problem_number = match.group(1).strip('.')
+        problem = match.group(2).strip()
+        question_type = 'math'  # change this later
+        question_obj = question(question_type, problem_number, problem)
+        questions.append(question_obj)
+
+    return questions
+
+
+
 if __name__ == "__main__":
     init_state()
-    response = groq_helper("What is the capital of South Korea?")
-    print(response)
     
+    a = parse_questions(""" 
+                
+                Exam questions:
+                
+                1. 4x+b=c
+                2. 5x+4=10
+                3. 6x+13 = 34
+                
+                
+                """)
     
+    print()
     
     
