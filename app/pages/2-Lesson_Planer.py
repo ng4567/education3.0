@@ -87,14 +87,14 @@ def app():
                 if contains_question_list:
                     if st.button("Save Math Questions as Homework Assignment", on_click=print('asdfa')):
                         
-                        # questions = parse_questions(llm_response)
-                        # updated_questions = st.session_state.questions + [questions]
-                        # st.session_state.questions = updated_questions
+                        questions = parse_questions(llm_response)
+                        updated_questions = st.session_state.questions + [questions]
+                        st.session_state.questions = updated_questions
                         
-                        # st.markdown(f'Sure! The following questions have been saved as an assignment {questions}.')
-                        # st.session_state.messages.append({"role": "assistant", 
-                        #                       "content": f'Sure! The following questions have been saved as an assignment {questions}.',
-                        #                       "assistant_msg_counter": st.session_state.msg_counter})
+                        st.markdown(f'Sure! The following questions have been saved as an assignment {questions}.')
+                        st.session_state.messages.append({"role": "assistant", 
+                                               "content": f'Sure! The following questions have been saved as an assignment {questions}.',
+                                               "assistant_msg_counter": st.session_state.msg_counter})
 
             # Add LLM response to chat history
             st.session_state.messages.append({"role": "assistant", 
