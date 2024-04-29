@@ -17,3 +17,11 @@ Then, set the `GROQ_API_KEY` environment variable or create a `.env` file and lo
 3. Finally, you'll need to setup your python environment. I have provided a requirements.txt file that contains all needed libraries.
 
 After creating a new conda or pyenv, run `pip install -r requirements.txt`
+
+
+# Run the Application
+
+Once you have setup your environment and obtained a groq API key, run the app:
+
+* `$ cd /app`
+* `streamlit run 1-home.py` 
