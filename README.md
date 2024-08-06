@@ -25,3 +25,8 @@ Once you have setup your environment and obtained a groq API key, run the app:
 
 * `$ cd app`
 * `streamlit run 1-home.py` 
+
+Here is a video demonstration of the app running:
+
+https://github.com/user-attachments/assets/0a4dab2f-ad26-43f9-b57f-410baff17db7
+
