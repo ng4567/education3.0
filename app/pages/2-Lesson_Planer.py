@@ -32,8 +32,7 @@ def app():
             st.session_state.messages = []
             st.session_state.messages.append({
                 "role": "assistant",
-                "content": f"""I am an intelligent AI assistant that can help you plan lessons based on the curriculum in your textbook! Leveraging the power of RAG, I am aware of the contents of your uploaded textbook. For example, here are the algebra problems I was able to parse from it:
-                {problems}
+                "content": f"""I am an intelligent AI assistant that can help you plan lessons based on the curriculum in your textbook! Leveraging the power of RAG, I am aware of the contents of your uploaded textbook.
                 
                 """
             })

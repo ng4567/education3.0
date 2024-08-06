@@ -126,6 +126,17 @@ def parse_questions(response_text):
     return questions
 
 
+def parse_homework_problems(homework_str):
+    # Define the regex pattern to match the problem number and the problem
+    pattern = r'(\d+\.\d+|\d+)\.\s*(.*?)(?=\d+\.\d+|\d+\.\d+|\d+\.$|$)'    
+    # Find all matches using the regex pattern
+    matches = re.findall(pattern, homework_str, re.DOTALL)
+    
+    # Create a dictionary from the matches
+    problems_dict = {num: problem.strip() for num, problem in matches}
+    
+    return problems_dict
+
 
 if __name__ == "__main__":
     init_state()
